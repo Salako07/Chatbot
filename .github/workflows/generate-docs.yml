@@ -3,10 +3,10 @@ name: Generate Documentation
 on:
   push:
     branches:
-      - main  # Change to your default branch if necessary
+      - main
   pull_request:
     branches:
-      - main  # Trigger on pull requests to the main branch
+      - main
 
 jobs:
   build:
@@ -14,26 +14,28 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Updated to v3
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v4  # Updated to v4
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'  # Specify your Python version
+        python-version: '3.x'
 
     - name: Install dependencies
       run: |
         pip install sphinx
         pip install sphinx-autobuild
-        pip install nbsphinx  # For converting Jupyter Notebooks to Sphinx documentation
-        pip install jupyter  # Ensure Jupyter is installed
+        pip install nbsphinx
+        pip install jupyter
 
     - name: Build documentation
       run: |
-        cd docs  # Change to your docs directory
-        make html  # Build the HTML documentation
+        cd docs
+        make html
 
     - name: Deploy documentation
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         pip install ghp-import
-        ghp-import -n -p -f docs/_build/html  # Adjust according to your output directory
+        ghp-import -n -p -f docs/_build/html -b gh-pages
