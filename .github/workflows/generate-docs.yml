@@ -1,0 +1,39 @@
+name: Generate Documentation
+
+on:
+  push:
+    branches:
+      - main  # Change to your default branch if necessary
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'  # Specify your Python version
+
+    - name: Install dependencies
+      run: |
+        pip install sphinx
+        pip install sphinx-autobuild
+        pip install nbsphinx  # For converting Jupyter Notebooks to Sphinx documentation
+        pip install jupyter  # Ensure Jupyter is installed
+
+    - name: Build documentation
+      run: |
+        cd docs  # Change to your docs directory
+        make html  # Build the HTML documentation
+
+    - name: Deploy documentation
+      run: |
+        pip install ghp-import
+        ghp-import -n -p -f docs/_build/html  # Adjust according to your output directory
