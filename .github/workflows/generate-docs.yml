@@ -35,7 +35,8 @@ jobs:
 
     - name: Deploy documentation
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_PAT: ${{ secrets.GH_PAT }}  # Use your stored PAT secret here
       run: |
         pip install ghp-import
-        ghp-import -n -p -f docs/_build/html -b gh-pages
+        ghp-import -n -p -f docs/_build/html
+        git push https://$GH_PAT@github.com/${{ github.repository }} gh-pages --force
